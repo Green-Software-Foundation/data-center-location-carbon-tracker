@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Lu Wang</Authors>
+    <PackageId>shell-green-watttime</PackageId>
+    <Company>Shell</Company>
+    <Product>shell-green-watttime</Product>
+	<RepositoryUrl>https://github.com/sede-x/shell-green-watttime</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RootNamespace>WattTime</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
