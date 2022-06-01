@@ -1,7 +1,7 @@
 # Data Center Location Carbon Tracker
 
 ## Background
-Most of cloud providers or on-premise data centers are providing carbon footprint of their services within their data centers. However, to make a decision holistically, carbon footprint within data centers are not sufficient, considering the overall constraints on green energy sources. What is the missing is the energy sources and carbon tracking across the electricity generation grid. This repo combines the date input from given data center locations (e.g. Azure data centers or on-prem), emission data index and electricity grid boundaries (e.g. [WattTime](https://www.watttime.org/)) to give a holistic view of carbon footprint in a data center location. The combined data set can be visalized in multiple ways. One example is to host with a map service. (e.g. Azure Map Service)
+Most of cloud providers or on-premise data centers are providing carbon footprint of their services within their data centers. However, to make a decision holistically, carbon footprint within data centers are not sufficient, considering the overall constraints on green energy sources. What is the missing is the energy sources and carbon tracking across the electricity generation grid. This repo combines the date input from given data center locations (e.g. Azure data centers or on-prem), emission data index and electricity grid boundaries (e.g. [WattTime](https://www.watttime.org/)) to give a holistic view of carbon footprint in a data center location. The combined data set can be further processed and visualized to reveal more insights, and give guidance to our engineering teams. One example is to host with a map service. (e.g. Azure Map Service)
 
 ## Measurements
 
