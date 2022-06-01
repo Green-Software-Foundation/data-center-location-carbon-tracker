@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Emission Data Grid with Data Centers</title>
+
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta http-equiv="x-ua-compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="This sample shows how to use Azure Maps to display MOER index data" />
+
+
+    <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+
+    <!-- Add reference to the Azure Maps Spatial IO module. -->
+    <script src="https://atlas.microsoft.com/sdk/javascript/spatial/0/atlas-spatial.min.js"></script>
+
+    <!-- Load in the JavaScript and CSS files that has our custom control. -->
+    <link rel="stylesheet" href="./scripts/azure-maps-layer-legend.min.css" type="text/css" />
+    <script src="./scripts/azure-maps-layer-legend.min.js"></script>
+
+    <script type='text/javascript'>
+        var map, datasource, popup, polygonLayer;
+
+        function GetMap() {
+            //Initialize a map instance.
+            map = new atlas.Map('myMap', {
+                view: 'Auto',
+
+                //Add authentication details for connecting to Azure Maps.
+                authOptions: {
+                    //Use Azure Active Directory authentication.
+                    //authType: 'anonymous',
+                    //clientId: '04ec075f-3827-4aed-9975-d56301a2d663', //Your Azure Active Directory client id for accessing your Azure Maps account.
+                    //getToken: function (resolve, reject, map) {
+                    //URL to your authentication service that retrieves an Azure Active Directory Token.
+                    // var tokenServiceUrl = "https://azuremapscodesamples.azurewebsites.net/Common/TokenService.ashx";
+
+                    // fetch(tokenServiceUrl).then(r => r.text()).then(token => resolve(token));
+                    //}
+
+                    //Alternatively, use an Azure Maps key. Get an Azure Maps key at https://azure.com/maps. NOTE: The primary key should be used as the key.
+                    //authType: 'subscriptionKey',
+                   // subscriptionKey: '[YOUR_AZURE_MAPS_KEY]'
+                }
+            });
+
+            //Wait until the map resources are ready.
+            map.events.add('ready', function () {
+                //Add the Style Control to the map.
+                map.controls.add(new atlas.control.StyleControl({
+                    //Optionally specify which map styles you want to appear in the picker.
+                    //All styles available with the S0 license tier appear by default in the control.
+                    //If using a S1 tier license, you can use the mapStyles option to add the 'satellite' and 'satellite_road_labels' styles to the control.
+                    mapStyles: ['road', 'road_shaded_relief', 'grayscale_light', 'night', 'grayscale_dark', 'satellite', 'satellite_road_labels']
+                }), {
+                    position: "top-right"
+                });
+
+
+                //Add the custom control to the map.
+                map.controls.add(new atlas.control.LegendControl({
+                    //Global title to display for the legend.
+                    title: 'MOER Legend',
+
+                    //All legend cards to display within the legend control.
+                    legends: [
+                        //A gradient legend that uses multiple color stops, some having labels.
+                        {
+                            type: 'gradient',
+                            subtitle: 'Gradient legend',
+                            footer: 'Marginal Operating Emissions Rate (MOER), in units of pounds of emissions per megawatt-hour (e.g. CO2 lbs/MWh)',
+                            stops: [
+                                {
+                                    offset: 0,
+                                    color: 'green',
+                                    label: '<300'
+                                },
+                                {
+                                    offset: 0.25,
+                                    color: 'yellow',
+                                    label: '<600'
+                                },
+                                {
+                                    offset: 0.5,
+                                    color: 'orange',
+                                    label: '<900'
+                                },
+                                {
+                                    offset: 0.75,
+                                    color: 'red',
+                                    label: '<1200'
+                                },
+                                {
+                                    offset: 1,
+                                    color: 'purple',
+                                    label: '>1500'
+                                }
+                            ]
+                        }
+                    ]
+                }), {
+                    position: "top-left"
+                });
+
+                //Create a data source to store the data in.
+                datasource = new atlas.source.DataSource();
+                map.sources.add(datasource);
+
+                //Add a layer for rendering the polygons.
+                polygonLayer = new atlas.layer.PolygonLayer(datasource, null, {
+                    fillColor: [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'MOER'],
+                        300, 'green',
+                        600, 'yellow',
+                        900, 'orange',
+                        1200, 'red',
+                        1500, 'purple',
+                    ],
+                    filter: ['any', ['==', ['geometry-type'], 'Polygon'], ['==', ['geometry-type'], 'MultiPolygon']]	//Only render Polygon or MultiPolygon in this layer.
+                });
+
+                //Add a click event to the layer.
+                map.events.add('click', polygonLayer, featureClicked);
+
+                //Add a layer for rendering line data.
+                var lineLayer = new atlas.layer.LineLayer(datasource, null, {
+                    strokeColor: '#1e90ff',
+                    strokeWidth: 4,
+                    filter: ['any', ['==', ['geometry-type'], 'LineString'], ['==', ['geometry-type'], 'MultiLineString']]	//Only render LineString or MultiLineString in this layer.
+                });
+
+                //Add a click event to the layer.
+                map.events.add('click', lineLayer, featureClicked);
+
+                //Add a layer for rendering point data.
+                var pointLayer = new atlas.layer.SymbolLayer(datasource, null, {
+                    iconOptions: {
+                        allowOverlap: true,
+                        ignorePlacement: true
+                    },
+                    color: [
+                        'match',
+
+                        //Get the property to match.
+                        ['get', 'Data Center'],
+
+                        //List the values to match and the result to return for each match.
+                        'Azure', 'blue',
+                        'AWS', 'orange',
+
+                        //Specify a default value to return if no match is found.
+                        'red'
+                    ],
+                    filter: ['any', ['==', ['geometry-type'], 'Point'], ['==', ['geometry-type'], 'MultiPoint']] //Only render Point or MultiPoints in this layer.
+                });
+
+                //Add a click event to the layer.
+                map.events.add('click', pointLayer, featureClicked);
+
+                //Add polygon and line layers to the map, below the labels..
+                map.layers.add([
+                    polygonLayer,
+
+                    //Add a layer for rendering the outline of polygons.
+                    new atlas.layer.LineLayer(datasource, null, {
+                        strokeColor: 'black',
+                        filter: ['any', ['==', ['geometry-type'], 'Polygon'], ['==', ['geometry-type'], 'MultiPolygon']]	//Only render Polygon or MultiPolygon in this layer.
+                    }),
+
+                    lineLayer, pointLayer
+                ], 'labels');
+
+                //Add the point layer above the labels.
+                map.layers.add(pointLayer);
+
+                //Create a popup but leave it closed so we can update it and display it later.
+                popup = new atlas.Popup({
+                    position: [0, 0]
+                });
+
+
+                Promise.all([
+                    fetch('./data/emission.csv', { mode: 'no-cors' }).then(response => response.text()),
+                    fetch('./data/map.json', { mode: 'no-cors' }).then(response => response.json()),
+                    fetch('./data/azure_regions_geo.json', { mode: 'no-cors' }).then(response => response.json()),
+                ]).then(results => {
+                    var csv = results[0];
+                    console.info(csv);
+                    //Column header: Abbr, MOER
+                    var csvTable = new atlas.io.core.CsvReader(csv).read();
+
+                    //For faster cross referencing, create lookup table for table row based on the state and county ids.
+                    var emissionInfo = {};
+
+                    csvTable.forEach((x, i) => {
+                        emissionInfo[x[0]] = i;
+                    });
+
+                    //Loop through the features in the GeoJSON file.
+                    results[1].features.forEach(f => {
+                        //Create the same cross reference ID as used in with the CSV data.
+                        const id = f.properties['abbrev'];
+                        var obj = {
+                            abbrev: id,
+                            MOER: 0
+                        };
+                        //Check to see if there is any cross referenced data.
+                        if (emissionInfo[id]) {
+                            //Grab the matching row of data.
+                            let row = csvTable[emissionInfo[id]];
+
+                            //Get the MOER value.
+                            let moer = parseFloat(row[1]);
+                            obj['MOER'] = moer;
+                            console.log(id);
+                            console.log(moer);
+                        }
+                        Object.assign(f.properties, obj);
+                    });
+
+                    datasource.add(results[1].features);
+                    datasource.add(results[2].features);
+
+                });
+
+            });
+        }
+
+
+        function featureClicked(e) {
+            //Make sure the event occurred on a shape feature.
+            if (e.shapes && e.shapes.length > 0) {
+                //By default, show the popup where the mouse event occurred.
+                var pos = e.position;
+                var offset = [0, 0];
+                var properties;
+
+                if (e.shapes[0] instanceof atlas.Shape) {
+                    properties = e.shapes[0].getProperties();
+
+                    //If the shape is a point feature, show the popup at the points coordinate.
+                    if (e.shapes[0].getType() === 'Point') {
+                        pos = e.shapes[0].getCoordinates();
+                        offset = [0, -18];
+                    }
+                } else {
+                    properties = e.shapes[0].properties;
+
+                    //If the shape is a point feature, show the popup at the points coordinate.
+                    if (e.shapes[0].type === 'Point') {
+                        pos = e.shapes[0].geometry.coordinates;
+                        offset = [0, -18];
+                    }
+                }
+
+                //Update the content and position of the popup.
+                popup.setOptions({
+                    //Create a table from the properties in the feature.
+                    content: atlas.PopupTemplate.applyTemplate(properties),
+                    position: pos,
+                    pixelOffset: offset
+                });
+
+                //Open the popup.
+                popup.open(map);
+            }
+        }
+    </script>
+</head>
+<body onload="GetMap()">
+    <div id="myMap" style="position:relative;width:100%;min-width:290px;height:1200px;"></div>
+</body>
+</html>
