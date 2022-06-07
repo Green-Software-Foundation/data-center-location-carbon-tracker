@@ -1,4 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+
+using GeoJSONConverter;
 using WattTime;
 
 var wattTimeConnector = new WattTimeConnector();
@@ -9,7 +11,13 @@ var dataFolder = args[2];
 var token = await wattTimeConnector.Login(username, password);
 
 
+
+if (!string.IsNullOrEmpty(dataFolder) && !Directory.Exists(dataFolder))
+{
+    Directory.CreateDirectory(dataFolder);
+}
 var regions = await wattTimeConnector.GetRegions(token);
+var realtimeData = new Dictionary<string, double>();
 using (var writer = new StreamWriter(Path.Combine(dataFolder, "emission.csv")))
 {
     foreach (var region in regions)
@@ -19,10 +27,19 @@ using (var writer = new StreamWriter(Path.Combine(dataFolder, "emission.csv")))
         var data = await wattTimeConnector.GetRealTimeData(token, region);
         Console.WriteLine(data);
         writer.WriteLine(data.CSVString());
-
-        
+        realtimeData[region.RegionCode] = data.MOER;
     }
 }
+
+var gridMap = await wattTimeConnector.GetMap(token);
+StreamReader reader = new StreamReader(gridMap);
+var moerWithGrid = MOERDataMerger.Merge(reader.ReadToEnd(), realtimeData);
+
+using (var writer = new StreamWriter(Path.Combine(dataFolder, "map_with_moer.json")))
+{
+    writer.Write(moerWithGrid);
+}
+
 
 using (var writer = new StreamWriter(Path.Combine(dataFolder, "emission_forecast.csv")))
 {

@@ -50,13 +50,7 @@ namespace WattTime
             }
         }
 
-        public DateTime ConvertedTime
-        {
-            get
-            {
-                return DateTimeOffset.Parse(Time).UtcDateTime;
-            }
-        }
+        public DateTime ConvertedTime => DateTimeOffset.Parse(Time).UtcDateTime;
 
         public override string ToString()
         {

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeoJSONConverter\GeoJSONConverter.csproj" />
     <ProjectReference Include="..\watttime\WattTime.csproj" />
   </ItemGroup>
 
