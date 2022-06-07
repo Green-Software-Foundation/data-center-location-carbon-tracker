@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using System.Reflection;
 
 namespace WattTime
 {
@@ -33,13 +34,49 @@ namespace WattTime
         [JsonProperty("version")]
         public string Version { get; set; }
 
+        public static string CSVHeader
+        {
+            get
+            {
+                var stringBuilder = new StringBuilder();
+                var props = typeof(EmissionData).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                foreach (var prop in props)
+                {
+                    stringBuilder.Append($"{prop.Name},");
+                }
+
+                return stringBuilder.ToString();
+
+            }
+        }
+
+        public DateTime ConvertedTime
+        {
+            get
+            {
+                return DateTimeOffset.Parse(Time).UtcDateTime;
+            }
+        }
+
         public override string ToString()
         {
             var stringBuilder = new StringBuilder();
-            var props = typeof(EmissionData).GetProperties();
+            var props = typeof(EmissionData).GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var prop in props)
             {
                 stringBuilder.Append($"{prop.Name}:{prop.GetValue(this)},");
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        public string ToCSVString()
+        {
+            var stringBuilder = new StringBuilder();
+            var props = typeof(EmissionData).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            foreach (var prop in props)
+            {
+                stringBuilder.Append($"{prop.GetValue(this)},");
             }
 
             return stringBuilder.ToString();
