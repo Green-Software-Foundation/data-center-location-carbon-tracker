@@ -18,6 +18,12 @@ This repo provides a .net core library to retrieve MOER real-time, historical, a
 
 An example app can be found in [**RegisterExample**](RegisterExample) folder. 
 
+Execute following command to run the sample app:
+```
+dotnet run -- username password email org
+```
+
+
 **Step 2. Log in the account** `public async Task<string> Login(string username, string password)`
 A token (valid for 30 minutes) will be returned after logged in. 
 
