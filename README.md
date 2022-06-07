@@ -1,7 +1,7 @@
 # Data Center Location Carbon Tracker
 
 ## Background
-Most of cloud providers or on-premise data centers are providing carbon footprint of their services within their data centers. However, to make a decision holistically, carbon footprint within data centers are not sufficient, considering the overall constraints on green energy sources. What is the missing is the energy sources and carbon tracking across the electricity generation grid. This repo combines the date input from given data center locations (e.g. Azure data centers or on-prem), emission data index and electricity grid boundaries (e.g. [WattTime](https://www.watttime.org/)) to give a holistic view of carbon footprint in a data center location. The combined data set can be further processed and visualized to reveal more insights, and give guidance to our engineering teams. One example is to host with a map service. (e.g. Azure Map Service)
+Today, if we as software engineers want to deploy our applications to a data center, we want to know how clean that energy source is. Most of cloud providers or on-premise data centers are providing carbon footprint of their services within their data centers. However, to make a decision holistically, carbon footprint within data centers are not sufficient, considering the overall constraints on green energy sources. What is the missing is the energy sources and carbon tracking across the electricity generation grid. This repo combines the date input from given data center locations (e.g. Azure data centers or on-prem), emission data index and electricity grid boundaries (e.g. [WattTime](https://www.watttime.org/)) to give a holistic view of carbon footprint in a data center location. The combined data set can be further processed and visualized to reveal more insights. This repo is aiming to provide an easy-to-use toolkit and give guidance to our engineering teams. 
 
 ## Measurements
 
@@ -12,11 +12,11 @@ Most of cloud providers or on-premise data centers are providing carbon footprin
 ## Input Data
 ### MOER Data from WattTime API
 One example to get MOER data in realtime is to use [WattTime API](https://www.watttime.org/api-documentation/#introduction)
-This repo provides a .net core library to retrieve MOER real-time, historical, and forecast data, given a region or a lat/lon.
+This repo provides a .net core library to retrieve MOER real-time, historical, and forecast data, given a region or a pair of lat/lon.
 
 **Step 1. Register an account** `public async Task<string> Register(User user)`
 
-An example app can be found in **RegisterExample** folder.
+An example app can be found in [**RegisterExample**](RegisterExample) folder. 
 
 **Step 2. Log in the account** `public async Task<string> Login(string username, string password)`
 A token (valid for 30 minutes) will be returned after logged in. 
@@ -32,6 +32,8 @@ public async Task<string> GetRealTimeData(string token, Region region)
 public async Task<Stream?> GetHistoryData(string token, string ba)
 public async Task<string> GetForecastData(string token, string ba)
 ```
+Couple of examples can be found in [**watttimeProcessor**](watttimeProcessor) folder.
+
 
 ### Data Center Locations
 ##### Azure Data Centers
@@ -44,11 +46,19 @@ az account list-locations
 #### On-premise Data Centers
 Given the pre-known locations (lat/lon), create the GeoJson file using *GeoJSON.Net.Geometry* and *GeoJSON.Net.Feature* objects.
 
-### Map Service
+### Visualization
+
 #### Azure Maps
 You can follow the [Azure Maps document](https://docs.microsoft.com/en-us/azure/azure-maps/) to create a map service. You can also refer to https://github.com/Azure-Samples/AzureMapsCodeSamples to get more examples.
 
-## Example Visualization
-
 ![image](https://user-images.githubusercontent.com/62902203/170833157-df33e8d9-a241-4bbc-bdc5-f4b270c5f332.png)
+
+#### Geo Data Viewer
+[geo-data-viewer](https://github.com/RandomFractals/geo-data-viewer) provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=RandomFractalsInc.geo-data-viewer) that supports to preview geojson files. By combining different data sources, you can configure and preview the MOER data on a map easily from VS Code.
+
+<img width="1062" alt="image" src="https://user-images.githubusercontent.com/62902203/172466718-52763c8e-8088-46b3-b55f-e17bc6db54f9.png">
+
+#### 
+
+
 
