@@ -57,14 +57,21 @@ Given the pre-known locations (lat/lon), create the GeoJson file using *GeoJSON.
 #### Azure Maps
 You can follow the [Azure Maps document](https://docs.microsoft.com/en-us/azure/azure-maps/) to create a map service. You can also refer to https://github.com/Azure-Samples/AzureMapsCodeSamples to get more examples.
 
+Here is an example map view using Azure Maps
 ![image](https://user-images.githubusercontent.com/62902203/170833157-df33e8d9-a241-4bbc-bdc5-f4b270c5f332.png)
 
 #### Geo Data Viewer
-[geo-data-viewer](https://github.com/RandomFractals/geo-data-viewer) provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=RandomFractalsInc.geo-data-viewer) that supports to preview geojson files. By combining different data sources, you can configure and preview the MOER data on a map easily from VS Code.
+[geo-data-viewer](https://github.com/RandomFractals/geo-data-viewer) provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=RandomFractalsInc.geo-data-viewer) that supports to preview geojson files. By combining different data sources, you can configure and preview the MOER data on a map easily from VS Code or Codespaces.
 
+Here is an example map view using geo-data-viewer
 <img width="1062" alt="image" src="https://user-images.githubusercontent.com/62902203/172466718-52763c8e-8088-46b3-b55f-e17bc6db54f9.png">
 
-#### 
+#### VS Code Data Preview
+[vscode-data-preview](https://github.com/RandomFractals/vscode-data-preview) provides a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=RandomFractalsInc.vscode-data-preview) that supports to preview csv, excel or other grid data in VS code or Codespaces.
+
+Here is an example chart of forecast data using vscode-data-preview 
+![image](https://user-images.githubusercontent.com/62902203/172475752-420ada12-8cc8-497c-bcb7-c9fd4208b99e.png)
+
 
 
 
