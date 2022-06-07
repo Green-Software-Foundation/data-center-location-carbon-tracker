@@ -10,12 +10,11 @@ var dataFolder = args[2];
 
 var token = await wattTimeConnector.Login(username, password);
 
-
-
 if (!string.IsNullOrEmpty(dataFolder) && !Directory.Exists(dataFolder))
 {
     Directory.CreateDirectory(dataFolder);
 }
+
 var regions = await wattTimeConnector.GetRegions(token);
 var realtimeData = new Dictionary<string, double>();
 using (var writer = new StreamWriter(Path.Combine(dataFolder, "emission.csv")))
@@ -31,14 +30,17 @@ using (var writer = new StreamWriter(Path.Combine(dataFolder, "emission.csv")))
     }
 }
 
-var gridMap = await wattTimeConnector.GetMap(token);
-StreamReader reader = new StreamReader(gridMap);
-var moerWithGrid = MOERDataMerger.Merge(reader.ReadToEnd(), realtimeData);
+//The pro license is required to retrieve map details.
+//var gridMap = await wattTimeConnector.GetMap(token);
+//using (StreamReader reader = new StreamReader(gridMap))
+//{
+//    var moerWithGrid = MOERDataMerger.Merge(reader.ReadToEnd(), realtimeData);
 
-using (var writer = new StreamWriter(Path.Combine(dataFolder, "map_with_moer.json")))
-{
-    writer.Write(moerWithGrid);
-}
+//    using (var writer = new StreamWriter(Path.Combine(dataFolder, "map_with_moer.json")))
+//    {
+//        writer.Write(moerWithGrid);
+//    }
+//}
 
 
 using (var writer = new StreamWriter(Path.Combine(dataFolder, "emission_forecast.csv")))
