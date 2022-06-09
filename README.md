@@ -73,5 +73,26 @@ Here is an example chart of forecast data using vscode-data-preview
 ![image](https://user-images.githubusercontent.com/62902203/172475752-420ada12-8cc8-497c-bcb7-c9fd4208b99e.png)
 
 
+## Collaborating With the WG
 
+**Adding changes**
+
+1. Create a new Issue<br>
+2. Discuss Issue with the WG --> Create PR if required<br>
+3. PR to be submitted against the **DEV feature branch** (Everything gets merged into the Dev branch)<br>
+4. PR discussed with the WG. If the WG agrees to the changes, the WG Chair/Project lead will merge the PR into DEV Feature branch - **Only the Chair/Project lead can merge into the Dev branch**.<br>
+
+**Project public release**
+
+1. At the point of the project being ready for release (merging Dev into Main), please inform the Opensource WG Chair(s), as there needs to be a consistency review for all GSF members to add any final comments before its official release.
+2. Once the consistency review has been completed and any comments resolved, the Opensource WG will approve the project for the Chair/Project lead to merge Dev into Main. 
+
+<figure>
+	<img src="images/single-trunk-branch.svg" alt="GSF Single-Trunk Based Branch Flow">
+	<figcaption></figcaption>
+</figure>
+
+
+## Help
+helpdesk@greensoftware.io
 
