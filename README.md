@@ -73,5 +73,19 @@ Here is an example chart of forecast data using vscode-data-preview
 ![image](https://user-images.githubusercontent.com/62902203/172475752-420ada12-8cc8-497c-bcb7-c9fd4208b99e.png)
 
 
+## Collaborating With the WG
 
+1. Create a [new Issue](https://github.com/Green-Software-Foundation/innovation_wg/issues/new)
+2. Discuss Issue with WG --> Create PR if required
+3. PR to be submitted against the **DEV feature branch**
+4. PR discussed with the WG. If agreed, the WG Chair will merge into **DEV Feature branch**
+
+<figure>
+	<img src="images/single-trunk-branch.svg" alt="GSF Single-Trunk Based Branch Flow">
+	<figcaption></figcaption>
+</figure>
+
+
+## Help
+helpdesk@greensoftware.io
 
