@@ -1,5 +1,7 @@
 # Data Center Location Carbon Tracker
 
+This project has been moved to dormant state as per our [Project Lifecycle document](https://github.com/Green-Software-Foundation/oc/blob/main/project-lifecycle.md#dormant). 
+
 ## Background
 Today, if we as software engineers want to deploy our applications to a data center, we want to know how clean that energy source is. Most of cloud providers or on-premise data centers are providing carbon footprint of their services within their data centers. However, to make a decision holistically, carbon footprint within data centers are not sufficient, considering the overall constraints on green energy sources. What is the missing is the energy sources and carbon tracking across the electricity generation grid. This repo combines the date input from given data center locations (e.g. Azure data centers or on-prem), emission data index and electricity grid boundaries (e.g. [WattTime](https://www.watttime.org/)) to give a holistic view of carbon footprint in a data center location. The combined data set can be further processed and visualized to reveal more insights. This repo is aiming to provide an easy-to-use toolkit and give guidance to our engineering teams. 
 
